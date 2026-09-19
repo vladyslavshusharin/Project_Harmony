@@ -5,42 +5,42 @@ function uploadFile($file) {
     try {
         // Ověření, že soubor byl nahrán
         if (!isset($file["tmp_name"]) || $file["tmp_name"] === "") {
-            throw new Exception("Nebyl vybrán žádný soubor.");
+            throw new Exception("No file was uploaded.");
         }
 
         // Ověření, že se jedná o obrázek
         $imageInfo = getimagesize($file["tmp_name"]);
         if ($imageInfo === false) {
-            throw new Exception("Soubor není platný obrázek.");
+            throw new Exception("File isn't a recognized image.");
         }
 
         // Validace MIME typu
         $allowed_mime = ['image/jpeg', 'image/png', 'image/gif'];
         if (!in_array($imageInfo['mime'], $allowed_mime)) {
-            throw new Exception("Obrázek má nepodporovaný MIME typ: " . $imageInfo['mime']);
+            throw new Exception("Image has unsupported MIME type: " . $imageInfo['mime']);
         }
 
         // Validace přípony
         $imageFileType = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
         $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
         if (!in_array($imageFileType, $allowed_extensions)) {
-            throw new Exception("Nepovolená přípona souboru: ." . $imageFileType . ". Povolené jsou JPG, JPEG, PNG a GIF.");
+            throw new Exception("Wrong extension of file: " . $imageFileType . ". Allowed: JPG, JPEG, PNG a GIF.");
         }
 
         // Validace velikosti souboru (do 5 MB)
         if ($file["size"] > 5000000) {
-            throw new Exception("Soubor je příliš velký. Maximální velikost je 5 MB.");
+            throw new Exception("File too big. Max size is 5MB");
         }
 
         // Validace rozměrů obrázku
         if ($imageInfo[0] > 3000 || $imageInfo[1] > 3000) {
-            throw new Exception("Obrázek je příliš velký: maximální rozměry jsou 3000x3000 px.");
+            throw new Exception("Image too big: Max resolution is 3000x3000 px.");
         }
 
         // Kontrola složky pro nahrávání
         if (!is_dir($target_dir)) {
             if (!mkdir($target_dir, 0755, true)) {
-                throw new Exception("Nepodařilo se vytvořit složku pro nahrávání obrázků.");
+                throw new Exception("Couldn't create directory for image uploading");
             }
         }
 
@@ -50,13 +50,13 @@ function uploadFile($file) {
 
         // Uložení souboru
         if (!move_uploaded_file($file["tmp_name"], $target_file)) {
-            throw new Exception("Chyba při přesunu nahraného souboru do cílové složky.");
+            throw new Exception("Error during moving the file into target directory.");
         }
 
         // Hotovo
         return [
             'success' => true,
-            'message' => "Soubor byl úspěšně nahrán.",
+            'message' => "File uploaded.",
             'path' => $target_file
         ];
 

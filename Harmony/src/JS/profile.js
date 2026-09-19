@@ -13,11 +13,11 @@ function ShowHide(){
 
 function editProfile(user_id){
     let nickname = document.getElementById("EditNickname").value;
-    let image_input = document.getElementById("UploadPicture");
-    if(nickname || (image_input.files && image_input.files[0])){
+    let image_input = document.getElementById("UploadPicture").files[0];
+    if(nickname || image_input){
         const newData = new FormData();
         newData.append('new_nickname', nickname);
-        newData.append('profile_picture', image_input.files[0]);
+        newData.append('profile_picture', image_input);
         fetch("index.php?controller=User&action=UpdateProfile", {
             method: 'POST',
             body: newData

@@ -25,8 +25,6 @@ if(isset($_GET['action']) && $_GET['action'] === "Signup"){
 
 }
 
-$_GET['controller'] = $NeededController;
-$_GET['action'] = $NeededAction;
 
 $ConClass = $NeededController . 'Controller';
 $ConFile = "Controller/$ConClass.php";
